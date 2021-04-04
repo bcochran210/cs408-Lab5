@@ -1,6 +1,8 @@
 package edu.jsu.mcis.cs408.lab5;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
@@ -11,21 +13,21 @@ import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView output;
+    private RecyclerView output;
     private EditText newMemo;
     private EditText memoToDelete;
+    private DatabaseHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        output = (TextView)findViewById(R.id.memos);
+        output = (RecyclerView)findViewById(R.id.memos);
         newMemo = (EditText)findViewById(R.id.newMemo);
         memoToDelete = (EditText)findViewById(R.id.memoToDelete);
 
-        DatabaseHandler db = new DatabaseHandler(this, null, null, 1);
-        String memos = db.getAllMemos();
-        output.setText(memos);
+        db = new DatabaseHandler(this, null, null, 1);
+        updateRecyclerView();
     }
 
     public void addMemo(View v) {
@@ -35,8 +37,7 @@ public class MainActivity extends AppCompatActivity {
         DatabaseHandler db = new DatabaseHandler(this, null, null, 1);
         db.addMemo(newMemoToAdd);
 
-        String memos = db.getAllMemos();
-        output.setText(memos);
+        updateRecyclerView();
     }
 
     public void deleteMemo(View v) {
@@ -45,7 +46,13 @@ public class MainActivity extends AppCompatActivity {
         DatabaseHandler db = new DatabaseHandler(this, null, null, 1);
         db.deleteMemo(memoIdToDelete);
 
-        String memos = db.getAllMemos();
-        output.setText(memos);
+        updateRecyclerView();
+    }
+
+    private void updateRecyclerView() {
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(db.getAllMemosAsList());
+        output.setHasFixedSize(true);
+        output.setLayoutManager(new LinearLayoutManager(this));
+        output.setAdapter(adapter);
     }
 }

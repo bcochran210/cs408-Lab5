@@ -18,7 +18,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public ViewHolder onCreateViewHolder (ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_main, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.memo_item, parent, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
@@ -37,6 +37,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private Memo memo;
+        private TextView memoNum;
         private TextView memoContent;
 
         public ViewHolder (View itemView) {
@@ -53,9 +54,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public void bindData() {
             if (memoContent == null) {
-                memoContent = (TextView)itemView.findViewById(R.id.newMemo);
+                memoContent = (TextView)itemView.findViewById(R.id.memo);
+            }
+            if (memoNum == null) {
+                memoNum = (TextView)itemView.findViewById(R.id.memoNum);
             }
 
+            memoNum.setText(String.valueOf(memo.getId()) + ": ");
             memoContent.setText(memo.getMemo());
         }
 
